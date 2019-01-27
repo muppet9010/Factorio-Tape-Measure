@@ -14,7 +14,7 @@ function Gui.GuiClickedEvent(eventData)
     local clickedElement = eventData.element
     if clickedElement.name == "tape-measure-mod-button" then Gui.ToggleGui(player) end
     if clickedElement.name == "get-tape-measure-button" then MeasureGui.GivePlayerTapeMeasure(player) end
-    if clickedElement.name == "close-gui-button" then Gui.CloseGui(player) end
+    if clickedElement.name == "close-tape-measure-gui-button" then Gui.CloseGui(player) end
 end
 
 
@@ -58,12 +58,13 @@ function Gui.OpenGui(player)
     resultsTable.add{type="label", name="results-table-tile-width-value", caption="", style="tm_padded_table_cell"}
     resultsTable.add{type="label", name="results-table-tile-depth-value", caption="", style="tm_padded_table_cell"}
 
-    local bottomSection = guiFrame.add{type="flow", name="bottomSection", style = "tm_padded_horizontal_flow", direction="horizontal"}
-    bottomSection.style.vertical_align = "center"
-    bottomSection.add{type="sprite-button", name="get-tape-measure-button", tooltip={"gui-tooltip.get-tape-measure"}, sprite="tape-measure", style = "tm_mod_button_sprite"}
-    local closeButtonSpacer = bottomSection.add{type="label", name="close-gui-button-spacer", caption=""}
-    closeButtonSpacer.style.width = 55
-    bottomSection.add{type="button", name="close-gui-button", caption={"gui-caption.close-gui-button"}}
+    local bottomSection = guiFrame.add{type="flow", name="tape-measure-bottom-section", direction="horizontal"}
+    bottomSection.style.top_padding = 4
+    bottomSection.add{type="sprite-button", name="get-tape-measure-button", tooltip={"gui-tooltip.get-tape-measure"}, sprite="tape-measure", style = "tm_button_sprite"}
+    local closerButtonFlow = bottomSection.add{type="flow", name="close-tape-measure-gui-button-flow"}
+    closerButtonFlow.style.horizontally_stretchable = true
+    closerButtonFlow.style.align = "right"
+    closerButtonFlow.add{type="button", name="close-tape-measure-gui-button", caption={"gui-caption.close-gui-button"}}
 end
 
 

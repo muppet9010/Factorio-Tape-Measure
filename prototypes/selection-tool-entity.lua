@@ -12,7 +12,7 @@ data:extend({
         subgroup = "other",
         order = "a",
         selection_color = { r = 0, g = 1, b = 0 },
-        selection_mode = {"matches-force", "tiles"}, --nothing will highlight
+        selection_mode = {"any-tile"},
         selection_cursor_box_type = "entity",
         alt_selection_color = { a = 0 },
         alt_selection_mode = {"matches-force", "tiles"}, --nothing will highlight
