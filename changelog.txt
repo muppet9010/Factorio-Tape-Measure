@@ -1,3 +1,7 @@
+0.1.1
+	Tidied up the gui slightly
+---------------------------------------------------------------------------------------------------
+
 0.1.0
 	Initial Release
 	Selection tool supporting selection box and clicking points
