@@ -1,5 +1,6 @@
 0.1.1
 	Tidied up the gui slightly
+	When selecting an area the tiles will be highlighted to help guage the intended edge of selection
 ---------------------------------------------------------------------------------------------------
 
 0.1.0
