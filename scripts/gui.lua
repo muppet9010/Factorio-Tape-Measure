@@ -21,15 +21,17 @@ end
 function Gui.RecreateModButton(player)
     local modFlow = player.gui.top["tape-measure-mod-flow"]
     if modFlow then modFlow.destroy() end
-    modFlow = player.gui.top.add{type="flow", name="tape-measure-mod-flow", style = "tm_padded_horizontal_flow", direction = "horizontal"}
-    modFlow.add{type="sprite-button", name="tape-measure-mod-button", tooltip={"gui-tooltip.mod-toggle-button"}, sprite="tape-measure", style = "tm_mod_button_sprite"}
 
-    Gui.CloseGui(player)
+    if settings.get_player_settings(player)["show-mod-button"].value then
+        modFlow = player.gui.top.add{type="flow", name="tape-measure-mod-flow", style = "tm_padded_horizontal_flow", direction = "horizontal"}
+        modFlow.add{type="sprite-button", name="tape-measure-mod-button", tooltip={"gui-tooltip.mod-toggle-button"}, sprite="tape-measure", style = "tm_mod_button_sprite"}
+    end
 end
 
 
-function Gui.RecreateModButtonForAll()
+function Gui.RecreateAllGuisForAll()
     for _, player in pairs(game.players) do
+        Gui.CloseGui(player)
         Gui.RecreateModButton(player)
     end
 end

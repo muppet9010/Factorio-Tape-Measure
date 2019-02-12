@@ -1,3 +1,9 @@
+0.1.2
+	Added configurable shortcut key to get a tape measure tool. Defaults to CONTROL + M.
+	Added a per player mod option to now show the mod button. Player then has to use the shortcut key to get a tape measure tool.
+	When the tool is held and right clicked (configurable) the tool is disposed of.
+---------------------------------------------------------------------------------------------------
+
 0.1.1
 	Tidied up the gui slightly
 	When selecting an area the tiles will be highlighted to help guage the intended edge of selection
