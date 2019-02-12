@@ -1,5 +1,6 @@
 local Gui = require("scripts/gui")
 local Utils = require("utility/utils")
+local MeasureGui = require("scripts/measure-gui")
 local Measure = {}
 
 
@@ -73,6 +74,12 @@ function Measure.OnModItemOpenedEvent(eventData)
     if itemName ~= "tape-measure" then return end
     local player = game.players[eventData.player_index]
     player.remove_item({name = "tape-measure", count = 1})
+end
+
+
+function Measure.OnGetTapeMeasureCustomInput(event)
+    local player = game.players[event.player_index]
+    MeasureGui.GivePlayerTapeMeasure(player)
 end
 
 
