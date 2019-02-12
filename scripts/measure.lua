@@ -77,9 +77,16 @@ function Measure.OnModItemOpenedEvent(eventData)
 end
 
 
-function Measure.OnGetTapeMeasureCustomInput(event)
-    local player = game.players[event.player_index]
+function Measure.OnGetTapeMeasureCustomInput(eventData)
+    local player = game.players[eventData.player_index]
     MeasureGui.GivePlayerTapeMeasure(player)
+end
+
+
+function Measure.DisposeTapeMeasureInHand(eventData)
+    local player = game.players[eventData.player_index]
+    if not player.cursor_stack.valid_for_read or player.cursor_stack.name ~= "tape-measure" then return end
+    player.cursor_stack.clear()
 end
 
 
