@@ -1,11 +1,13 @@
 {
     "name": "tape_measure_tool",
-    "version": "0.1.2",
+    "version": "17.1.3",
     "title": "Tape Measure",
     "author": "Muppet9010",
     "contact": "",
     "homepage": "",
-    "factorio_version": "0.16",
-    "dependencies": ["base >= 0.16"],
+    "factorio_version": "0.17",
+    "dependencies": [
+        "base >= 0.17.79"
+    ],
     "description": "Measure tiles and distances"
 }
