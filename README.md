@@ -8,8 +8,8 @@ Selection Box
 Clicking Points
 ![Clicking Points](https://media.giphy.com/media/5zsdp1w8VO0KsYxQq8/giphy.gif)
 
-If you single left click with the tool it will make a tiny selection box and the mod will detect this as a point. Points will be measured in sequentially clicked pairs.
-If you left click and hold with the tool it will show the selection box and when you release the selected area will be measured. A selection of less than 1 tile will be recognised as a click.
+If you single left click with the tool it will detect this as a point. Points will be measured in sequentially clicked pairs.
+If you left click and hold with the tool it will show the selection box and when you release the selected area will be measured. A selection of less than 1 tile width and height will be recognised as a click.
 If you right click (configurable) with the tool held it will be disposed of.
 
 The tool can be used via the map when zoomed in to see things properly.
