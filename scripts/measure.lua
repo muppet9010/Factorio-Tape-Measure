@@ -3,9 +3,10 @@ local Utils = require("utility/utils")
 local MeasureGui = require("scripts/measure-gui")
 local Measure = {}
 
-
 function Measure.OnSelectedEvent(eventData)
-    if eventData.item ~= "tape-measure" then return end
+    if eventData.item ~= "tape-measure" then
+        return
+    end
     local area = eventData.area
     local distanceX = area.right_bottom.x - area.left_top.x
     local distanceY = area.right_bottom.y - area.left_top.y
@@ -16,46 +17,47 @@ function Measure.OnSelectedEvent(eventData)
     end
 end
 
-
 function Measure.SelectionBoxMade(eventData)
     local area = eventData.area
     local pointsDistanceX = area.right_bottom.x - area.left_top.x
     local pointsDistanceY = area.right_bottom.y - area.left_top.y
 
-    local positionedBoundingBox = Utils.CalculatePositionedBoundingBoxFrom2Points(area.left_top, area.right_bottom)
-        local tile_left_top_x = math.floor(positionedBoundingBox.left_top.x)
-        local tile_left_top_y = math.floor(positionedBoundingBox.left_top.y)
-        local tile_right_bottom_x = math.floor(positionedBoundingBox.right_bottom.x)
-        local tile_right_bottom_y = math.floor(positionedBoundingBox.right_bottom.y)
-        local pointsTileX = (tile_right_bottom_x - tile_left_top_x) + 1
-        local pointsTileY = (tile_right_bottom_y - tile_left_top_y) + 1
-
+    local positionedBoundingBox = Utils.CalculateBoundingBoxFrom2Points(area.left_top, area.right_bottom)
+    local tile_left_top_x = math.floor(positionedBoundingBox.left_top.x)
+    local tile_left_top_y = math.floor(positionedBoundingBox.left_top.y)
+    local tile_right_bottom_x = math.floor(positionedBoundingBox.right_bottom.x)
+    local tile_right_bottom_y = math.floor(positionedBoundingBox.right_bottom.y)
+    local pointsTileX = (tile_right_bottom_x - tile_left_top_x) + 1
+    local pointsTileY = (tile_right_bottom_y - tile_left_top_y) + 1
 
     local player = game.players[eventData.player_index]
     Gui.UpdateGui(player, pointsDistanceX, pointsDistanceY, pointsTileX, pointsTileY)
     global.MOD.PlayerFirstClick[player.index] = nil
 end
 
-
 function Measure.PointClicked(eventData)
     local area = eventData.area
     local distanceX = area.right_bottom.x - area.left_top.x
     local distanceY = area.right_bottom.y - area.left_top.y
-    local centerPos = {x = area.left_top.x + (distanceX/2), y = area.left_top.y + (distanceY/2)}
+    local centerPos = {x = area.left_top.x + (distanceX / 2), y = area.left_top.y + (distanceY / 2)}
     local player = game.players[eventData.player_index]
     local firstPoint = global.MOD.PlayerFirstClick[player.index]
     if firstPoint == nil then
         global.MOD.PlayerFirstClick[player.index] = centerPos
-        player.surface.create_entity{type="flying-text", name="flying-text", position=centerPos, text={"player-message.first-point"}, color = {r=0, g=1, b=0, a=0}}
+        player.surface.create_entity {type = "flying-text", name = "flying-text", position = centerPos, text = {"player-message.first-point"}, color = {r = 0, g = 1, b = 0, a = 0}}
     else
         local secondPoint = centerPos
-        player.surface.create_entity{type="flying-text", name="flying-text", position=centerPos, text={"player-message.second-point"}, color = {r=0, g=1, b=0, a=0}}
+        player.surface.create_entity {type = "flying-text", name = "flying-text", position = centerPos, text = {"player-message.second-point"}, color = {r = 0, g = 1, b = 0, a = 0}}
         local pointsDistanceX = firstPoint.x - secondPoint.x
-        if pointsDistanceX < 0 then pointsDistanceX = 0 - pointsDistanceX end
+        if pointsDistanceX < 0 then
+            pointsDistanceX = 0 - pointsDistanceX
+        end
         local pointsDistanceY = firstPoint.y - secondPoint.y
-        if pointsDistanceY < 0 then pointsDistanceY = 0 - pointsDistanceY end
+        if pointsDistanceY < 0 then
+            pointsDistanceY = 0 - pointsDistanceY
+        end
 
-        local positionedBoundingBox = Utils.CalculatePositionedBoundingBoxFrom2Points(firstPoint, secondPoint)
+        local positionedBoundingBox = Utils.CalculateBoundingBoxFrom2Points(firstPoint, secondPoint)
         local tile_left_top_x = math.floor(positionedBoundingBox.left_top.x)
         local tile_left_top_y = math.floor(positionedBoundingBox.left_top.y)
         local tile_right_bottom_x = math.floor(positionedBoundingBox.right_bottom.x)
@@ -68,26 +70,26 @@ function Measure.PointClicked(eventData)
     end
 end
 
-
 function Measure.OnModItemOpenedEvent(eventData)
     local itemName = eventData.item.name
-    if itemName ~= "tape-measure" then return end
+    if itemName ~= "tape-measure" then
+        return
+    end
     local player = game.players[eventData.player_index]
     player.remove_item({name = "tape-measure", count = 1})
 end
-
 
 function Measure.OnGetTapeMeasureCustomInput(eventData)
     local player = game.players[eventData.player_index]
     MeasureGui.GivePlayerTapeMeasure(player)
 end
 
-
 function Measure.DisposeTapeMeasureInHand(eventData)
     local player = game.players[eventData.player_index]
-    if not player.cursor_stack.valid_for_read or player.cursor_stack.name ~= "tape-measure" then return end
+    if not player.cursor_stack.valid_for_read or player.cursor_stack.name ~= "tape-measure" then
+        return
+    end
     player.cursor_stack.clear()
 end
-
 
 return Measure

@@ -1,11 +1,13 @@
 ---------------------------------------------------------------------------------------------------
 Version: 18.1.4
-Date: 2020-xx-xx
+Date: 2020-01-26
   Features:
     - Updated for 0.18 Factorio as-is
   Changes:
   Bugfixes:
   Info:
+    - Updated on to latest utility library version
+    - Gui switched to use my style library - slight visual changes
 ---------------------------------------------------------------------------------------------------
 Version: 17.1.3
 Date: 2020-01-12
