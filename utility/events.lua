@@ -7,8 +7,8 @@ MOD.events = MOD.events or {}
 MOD.customEventNameToId = MOD.customEventNameToId or {}
 MOD.filteredEvents = MOD.filteredEvents or {}
 
---Called from the root of Control.lua
-function Events.RegisterEvent(eventName, filterName, filterData)
+--Called from the root of Control.lua for vanilla events and custom events.
+Events.RegisterEvent = function(eventName, filterName, filterData)
     if eventName == nil then
         error("Events.RegisterEvent called with missing arguments")
     end
@@ -34,8 +34,16 @@ function Events.RegisterEvent(eventName, filterName, filterData)
     script.on_event(eventId, Events._HandleEvent)
 end
 
---Called from OnLoad() from each script file.
-function Events.RegisterHandler(eventName, handlerName, handlerFunction, filterName)
+--Called from the root of Control.lua for custom actions as their names are handled specially.
+Events.RegisterCustomAction = function(actionName)
+    if actionName == nil then
+        error("Events.RegisterCustomAction called with missing arguments")
+    end
+    script.on_event(actionName, Events._HandleEvent)
+end
+
+--Called from OnLoad() from each script file. Handles all event types and custom actions.
+Events.RegisterHandler = function(eventName, handlerName, handlerFunction, filterName)
     if eventName == nil or handlerName == nil or handlerFunction == nil then
         error("Events.RegisterHandler called with missing arguments")
     end
@@ -55,7 +63,7 @@ function Events.RegisterHandler(eventName, handlerName, handlerFunction, filterN
 end
 
 --Called when needed
-function Events.RemoveHandler(eventName, handlerName, filterName)
+Events.RemoveHandler = function(eventName, handlerName, filterName)
     if eventName == nil or handlerName == nil then
         error("Events.RemoveHandler called with missing arguments")
     end
@@ -72,17 +80,20 @@ function Events.RemoveHandler(eventName, handlerName, filterName)
     end
 end
 
-function Events._HandleEvent(eventData)
-    local eventId = eventData.name
-    if MOD.events[eventId] == nil then
-        return
-    end
-    for _, handlerFunction in pairs(MOD.events[eventId]) do
-        handlerFunction(eventData)
+Events._HandleEvent = function(eventData)
+    local eventId, inputName = eventData.name, eventData.input_name
+    if MOD.events[eventId] ~= nil then
+        for _, handlerFunction in pairs(MOD.events[eventId]) do
+            handlerFunction(eventData)
+        end
+    elseif MOD.events[inputName] ~= nil then
+        for _, handlerFunction in pairs(MOD.events[inputName]) do
+            handlerFunction(eventData)
+        end
     end
 end
 
-function Events._HandleFilteredEvent(eventData)
+Events._HandleFilteredEvent = function(eventData)
     local eventId = eventData.name
     local filterName = eventData.filterName
     if MOD.filteredEvents[eventId .. filterName] == nil then
@@ -94,7 +105,7 @@ function Events._HandleFilteredEvent(eventData)
 end
 
 --Called when needed
-function Events.RaiseEvent(eventData)
+Events.RaiseEvent = function(eventData)
     eventData.tick = game.tick
     local eventName = eventData.name
     if defines.events[eventName] ~= nil then

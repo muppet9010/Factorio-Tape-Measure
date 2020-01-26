@@ -44,9 +44,15 @@ GUIActions._HandleButtonAction = function(rawFactorioEventData)
         local actionName = buttonDetails.actionName
         local actionFunction = MOD.buttonActions[actionName]
         local actionData = {actionName = actionName, playerIndex = rawFactorioEventData.player_index, data = buttonDetails.data, eventData = rawFactorioEventData}
+        if actionFunction == nil then
+            error("ERROR: GUI Button Handler - no registered action for name: '" .. tostring(actionName) .. "'")
+            return
+        end
         actionFunction(actionData)
     else
-        error("ERROR: GUI Button Handler - no registered button for name: '" .. tostring(clickedElementName) .. "'")
+        --Don't error as clicking on labels and flows also comes through.
+        --error("ERROR: GUI Button Handler - no registered button for name: '" .. tostring(clickedElementName) .. "'")
+        return
     end
 end
 

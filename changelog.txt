@@ -7,7 +7,8 @@ Date: 2020-01-26
   Bugfixes:
   Info:
     - Updated on to latest utility library version
-    - Gui switched to use my style library - slight visual changes
+    - Gui switched to use my style library
+    - Updated to my current modding coding blocks and naming styles throughout
 ---------------------------------------------------------------------------------------------------
 Version: 17.1.3
 Date: 2020-01-12

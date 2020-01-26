@@ -4,8 +4,8 @@ data:extend(
     {
         {
             type = "selection-tool",
-            name = "tape-measure",
-            icon = Constants.AssetModName .. "/graphics/item/tape-measure.png",
+            name = "tape_measure_tool",
+            icon = Constants.AssetModName .. "/graphics/item/tape_measure_tool.png",
             icon_size = 640,
             stack_size = 1,
             subgroup = "other",
