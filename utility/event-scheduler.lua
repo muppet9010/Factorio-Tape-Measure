@@ -5,13 +5,13 @@ MOD = MOD or {}
 MOD.scheduledEventNames = MOD.scheduledEventNames or {}
 
 --Called from the root of Control.lua
-function EventScheduler.RegisterScheduler()
+EventScheduler.RegisterScheduler = function()
     script.on_event(defines.events.on_tick, EventScheduler._OnSchedulerCycle)
 end
 
 --Called from OnLoad() from each script file.
 --When eventFunction is triggered eventData argument passed: {tick = tick, name = eventName, instanceId = instanceId, data = scheduledFunctionData}
-function EventScheduler.RegisterScheduledEventType(eventName, eventFunction)
+EventScheduler.RegisterScheduledEventType = function(eventName, eventFunction)
     if eventName == nil or eventFunction == nil then
         error("EventScheduler.RegisterScheduledEventType called with missing arguments")
     end
@@ -19,7 +19,7 @@ function EventScheduler.RegisterScheduledEventType(eventName, eventFunction)
 end
 
 --Called from OnStartup() or from some other event or trigger to schedule an event.
-function EventScheduler.ScheduleEvent(eventTick, eventName, instanceId, eventData)
+EventScheduler.ScheduleEvent = function(eventTick, eventName, instanceId, eventData)
     if eventName == nil then
         error("EventScheduler.ScheduleEvent called with missing arguments")
     end
@@ -39,7 +39,7 @@ function EventScheduler.ScheduleEvent(eventTick, eventName, instanceId, eventDat
 end
 
 --Called whenever required.
-function EventScheduler.IsEventScheduled(targetEventName, targetInstanceId, targetTick)
+EventScheduler.IsEventScheduled = function(targetEventName, targetInstanceId, targetTick)
     if targetEventName == nil then
         error("EventScheduler.IsEventScheduled called with missing arguments")
     end
@@ -51,7 +51,7 @@ function EventScheduler.IsEventScheduled(targetEventName, targetInstanceId, targ
 end
 
 --Called whenever required.
-function EventScheduler.RemoveScheduledEvents(targetEventName, targetInstanceId, targetTick)
+EventScheduler.RemoveScheduledEvents = function(targetEventName, targetInstanceId, targetTick)
     if targetEventName == nil then
         error("EventScheduler.RemoveScheduledEvents called with missing arguments")
     end
@@ -59,7 +59,7 @@ function EventScheduler.RemoveScheduledEvents(targetEventName, targetInstanceId,
 end
 
 --Called whenever required.
-function EventScheduler.GetScheduledEvents(targetEventName, targetInstanceId, targetTick)
+EventScheduler.GetScheduledEvents = function(targetEventName, targetInstanceId, targetTick)
     if targetEventName == nil then
         error("EventScheduler.GetScheduledEvents called with missing arguments")
     end

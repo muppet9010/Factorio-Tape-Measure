@@ -5,12 +5,12 @@ MOD = MOD or {}
 MOD.interfaces = MOD.interfaces or {}
 
 --Called from OnLoad() from each script file.
-function Interfaces.RegisterInterface(interfaceName, interfaceFunction)
+Interfaces.RegisterInterface = function(interfaceName, interfaceFunction)
     MOD.interfaces[interfaceName] = interfaceFunction
 end
 
 --Called when needed.
-function Interfaces.Call(interfaceName, ...)
+Interfaces.Call = function(interfaceName, ...)
     if MOD.interfaces[interfaceName] ~= nil then
         return MOD.interfaces[interfaceName](...)
     else

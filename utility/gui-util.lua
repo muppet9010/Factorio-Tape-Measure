@@ -1,11 +1,11 @@
 local GuiUtil = {}
 local Constants = require("constants")
 
-function GuiUtil.GenerateName(name, type)
+GuiUtil.GenerateName = function(name, type)
     return Constants.ModName .. "-" .. name .. "-" .. type
 end
 
-function GuiUtil._ReplaceSelfWithGeneratedName(arguments, argName)
+GuiUtil._ReplaceSelfWithGeneratedName = function(arguments, argName)
     local arg = arguments[argName]
     if arg == nil then
         arg = nil
@@ -17,7 +17,7 @@ function GuiUtil._ReplaceSelfWithGeneratedName(arguments, argName)
     return arg
 end
 
-function GuiUtil.AddElement(arguments, storeName)
+GuiUtil.AddElement = function(arguments, storeName)
     --pass self as the caption/tooltip value or localised string name and it will be set to its GenerateName() under gui-caption/gui-tooltip
     arguments.name = GuiUtil.GenerateName(arguments.name, arguments.type)
     arguments.caption = GuiUtil._ReplaceSelfWithGeneratedName(arguments, "caption")
@@ -29,23 +29,23 @@ function GuiUtil.AddElement(arguments, storeName)
     return element
 end
 
-function GuiUtil._CreatePlayersElementReferenceStorage(playerIndex, storeName)
+GuiUtil._CreatePlayersElementReferenceStorage = function(playerIndex, storeName)
     global.GUIUtilPlayerElementReferenceStorage = global.GUIUtilPlayerElementReferenceStorage or {}
     global.GUIUtilPlayerElementReferenceStorage[playerIndex] = global.GUIUtilPlayerElementReferenceStorage[playerIndex] or {}
     global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName] = global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName] or {}
 end
 
-function GuiUtil.AddElementToPlayersReferenceStorage(playerIndex, storeName, fullName, element)
+GuiUtil.AddElementToPlayersReferenceStorage = function(playerIndex, storeName, fullName, element)
     GuiUtil._CreatePlayersElementReferenceStorage(playerIndex, storeName)
     global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName][fullName] = element
 end
 
-function GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, storeName, name, type)
+GuiUtil.GetElementFromPlayersReferenceStorage = function(playerIndex, storeName, name, type)
     GuiUtil._CreatePlayersElementReferenceStorage(playerIndex, storeName)
     return global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName][GuiUtil.GenerateName(name, type)]
 end
 
-function GuiUtil.GetOrAddElement(arguments, storeName)
+GuiUtil.GetOrAddElement = function(arguments, storeName)
     local frameElement = GuiUtil.GetElementFromPlayersReferenceStorage(arguments.parent.player_index, storeName, arguments.name, arguments.type)
     if frameElement == nil then
         frameElement = GuiUtil.AddElement(arguments, storeName)
@@ -53,7 +53,7 @@ function GuiUtil.GetOrAddElement(arguments, storeName)
     return frameElement
 end
 
-function GuiUtil.UpdateElementFromPlayersReferenceStorage(playerIndex, storeName, name, type, arguments)
+GuiUtil.UpdateElementFromPlayersReferenceStorage = function(playerIndex, storeName, name, type, arguments)
     local element = GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, storeName, name, type)
     if element ~= nil then
         local generatedName = GuiUtil.GenerateName(name, type)
@@ -67,7 +67,7 @@ function GuiUtil.UpdateElementFromPlayersReferenceStorage(playerIndex, storeName
     return element
 end
 
-function GuiUtil.DestroyElementInPlayersReferenceStorage(playerIndex, storeName, name, type)
+GuiUtil.DestroyElementInPlayersReferenceStorage = function(playerIndex, storeName, name, type)
     local elementName = GuiUtil.GenerateName(name, type)
     if global.GUIUtilPlayerElementReferenceStorage ~= nil and global.GUIUtilPlayerElementReferenceStorage[playerIndex] ~= nil and global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName] ~= nil and global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName][elementName] ~= nil then
         if global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName][elementName].valid then
@@ -77,7 +77,7 @@ function GuiUtil.DestroyElementInPlayersReferenceStorage(playerIndex, storeName,
     end
 end
 
-function GuiUtil.DestroyPlayersReferenceStorage(playerIndex, storeName)
+GuiUtil.DestroyPlayersReferenceStorage = function(playerIndex, storeName)
     if global.GUIUtilPlayerElementReferenceStorage == nil or global.GUIUtilPlayerElementReferenceStorage[playerIndex] == nil then
         return
     end
