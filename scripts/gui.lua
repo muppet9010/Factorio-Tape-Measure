@@ -100,7 +100,7 @@ end
 
 Gui.GivePlayerTapeMeasureButtonAction = function(actionData)
     local player = game.get_player(actionData.playerIndex)
-    Interfaces.Call("MeasureGui.GivePlayerTapeMeasure", player)
+    Interfaces.Call("Measure.GivePlayerTapeMeasure", player)
 end
 
 return Gui

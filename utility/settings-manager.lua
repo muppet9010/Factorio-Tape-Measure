@@ -10,37 +10,6 @@ SettingsManager.ExpectedValueTypes.arrayOfStrings = {name = "arrayOfStrings", ha
 SettingsManager.ExpectedValueTypes.arrayOfNumbers = {name = "arrayOfNumbers", hasChildren = true, childExpectedValueType = SettingsManager.ExpectedValueTypes.number}
 SettingsManager.ExpectedValueTypes.arrayOfBooleans = {name = "arrayOfBooleans", hasChildren = true, childExpectedValueType = SettingsManager.ExpectedValueTypes.boolean}
 
---Strips any % characters from a number value to avoid silly user entry issues.
-local function ValueToType(value, expectedType)
-    if expectedType.name == SettingsManager.ExpectedValueTypes.string.name then
-        if type(value) == "string" then
-            return value
-        else
-            return nil
-        end
-    elseif expectedType.name == SettingsManager.ExpectedValueTypes.number.name then
-        value = string.gsub(value, "%%", "")
-        return tonumber(value)
-    elseif expectedType.name == SettingsManager.ExpectedValueTypes.boolean.name then
-        return Utils.ToBoolean(value)
-    elseif expectedType.hasChildren then
-        if type(value) ~= "table" then
-            return nil
-        end
-
-        local tableOfTypedValues = {}
-        for k, v in pairs(value) do
-            local typedV = ValueToType(v, expectedType.childExpectedValueType)
-            if typedV ~= nil then
-                tableOfTypedValues[k] = typedV
-            else
-                return nil
-            end
-        end
-        return tableOfTypedValues
-    end
-end
-
 SettingsManager.CreateGlobalGroupSettingsContainer = function(globalGroupsContainer, id, globalSettingContainerName)
     globalGroupsContainer[id] = globalGroupsContainer[id] or {}
     globalGroupsContainer[id][globalSettingContainerName] = globalGroupsContainer[id][globalSettingContainerName] or {}
@@ -91,7 +60,7 @@ SettingsManager.HandleSettingWithArrayOfValues = function(settingType, settingNa
     if isMultipleGroups then
         for id, value in pairs(tableOfValues) do
             local thisGlobalSettingContainer = SettingsManager.CreateGlobalGroupSettingsContainer(globalGroupsContainer, id, globalSettingContainerName)
-            local typedValue = ValueToType(value, expectedValueType)
+            local typedValue = SettingsManager._ValueToType(value, expectedValueType)
             if typedValue ~= nil then
                 thisGlobalSettingContainer[globalSettingName] = valueHandlingFunction(typedValue)
             else
@@ -102,7 +71,7 @@ SettingsManager.HandleSettingWithArrayOfValues = function(settingType, settingNa
         defaultSettingsContainer[globalSettingName] = valueHandlingFunction(defaultValue)
     else
         local value = tableOfValues or values
-        local typedValue = ValueToType(value, expectedValueType)
+        local typedValue = SettingsManager._ValueToType(value, expectedValueType)
         if typedValue ~= nil then
             defaultSettingsContainer[globalSettingName] = valueHandlingFunction(typedValue)
         else
@@ -124,6 +93,37 @@ SettingsManager.GetSettingValueForId = function(globalGroupsContainer, id, globa
         return defaultSettingsContainer[settingName]
     end
     error("Trying to get mod setting '" .. settingName .. "' that doesn't exist")
+end
+
+--Strips any % characters from a number value to avoid silly user entry issues.
+SettingsManager._ValueToType = function(value, expectedType)
+    if expectedType.name == SettingsManager.ExpectedValueTypes.string.name then
+        if type(value) == "string" then
+            return value
+        else
+            return nil
+        end
+    elseif expectedType.name == SettingsManager.ExpectedValueTypes.number.name then
+        value = string.gsub(value, "%%", "")
+        return tonumber(value)
+    elseif expectedType.name == SettingsManager.ExpectedValueTypes.boolean.name then
+        return Utils.ToBoolean(value)
+    elseif expectedType.hasChildren then
+        if type(value) ~= "table" then
+            return nil
+        end
+
+        local tableOfTypedValues = {}
+        for k, v in pairs(value) do
+            local typedV = SettingsManager._ValueToType(v, expectedType.childExpectedValueType)
+            if typedV ~= nil then
+                tableOfTypedValues[k] = typedV
+            else
+                return nil
+            end
+        end
+        return tableOfTypedValues
+    end
 end
 
 return SettingsManager
