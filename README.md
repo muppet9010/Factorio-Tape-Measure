@@ -15,5 +15,5 @@ If you right click (configurable) with the tool held it will be disposed of.
 The tool can be used via the map when zoomed in to see things properly.
 When you use the tape measure tool the mods GUI will open to show the results. Closing the GUI will clear the results.
 You can obtain the tape measure item via the mod's in-game button in the top left corner or via a configurable shortcut (default: Control M)
-You can discard the tape measure item from your inventory by right-clicking on it.
+You can discard the tape measure item from your inventory by also right-clicking on it.
 The mod button in the top left can be hidden via a per player mod setting. Useful for when using the shortcut to obtain the tape measure and you want to reduce mod icon clutter on the screen.

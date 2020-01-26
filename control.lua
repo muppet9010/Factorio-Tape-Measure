@@ -1,44 +1,41 @@
 local Gui = require("scripts/gui")
 local Measure = require("scripts/measure")
+local Events = require("utility/events")
+local GuiActions = require("utility/gui-actions")
 
+--TODO: add migration script to replace any held measureig tools
 
-local function MakeGlobals()
-    if global.MOD == nil then global.MOD = {} end
-    if global.MOD.PlayerFirstClick == nil then global.MOD.PlayerFirstClick = {} end
-    if global.MOD.PlayerResultTable == nil then global.MOD.PlayerResultTable = {} end
+local function CreateGlobals()
+    Measure.CreateGlobals()
 end
 
-
-local function UpdatedPlayerModButtonSetting(player)
-    Gui.RecreateModButton(player)
+local function OnLoad()
+    --Any Remote Interface registration calls can go in here or in root of control.lua
+    Measure.OnLoad()
+    Gui.OnLoad()
 end
-
-
-local function UpdateSetting(settingName, player)
-	if settingName == "show-mod-button" then
-		UpdatedPlayerModButtonSetting(player)
-	end
-end
-
 
 local function OnSettingChanged(event)
-    local player = game.players[event.player_index]
-	UpdateSetting(event.setting, player)
+    Gui.OnSettingChanged(event)
 end
 
+local function OnStartup()
+    CreateGlobals()
+    OnSettingChanged(nil)
+    OnLoad()
 
-script.on_init(function()
-    MakeGlobals()
-    Gui.RecreateAllGuisForAll()
-end)
-script.on_configuration_changed(function()
-    MakeGlobals()
-    Gui.RecreateAllGuisForAll()
-end)
+    Gui.OnStartup()
+end
+
+script.on_init(OnStartup)
+script.on_configuration_changed(OnStartup)
 script.on_event(defines.events.on_runtime_mod_setting_changed, OnSettingChanged)
-script.on_event(defines.events.on_player_joined_game, Gui.PlayerJoinedEvent)
-script.on_event(defines.events.on_gui_click, Gui.GuiClickedEvent)
-script.on_event(defines.events.on_player_selected_area, Measure.OnSelectedEvent)
-script.on_event(defines.events.on_mod_item_opened, Measure.OnModItemOpenedEvent)
-script.on_event("get-tape-measure", Measure.OnGetTapeMeasureCustomInput)
-script.on_event("dispose-tape-measure", Measure.DisposeTapeMeasureInHand)
+script.on_load(OnLoad)
+
+Events.RegisterEvent(defines.events.on_player_joined_game)
+Events.RegisterEvent(defines.events.on_player_selected_area)
+Events.RegisterEvent(defines.events.on_mod_item_opened)
+Events.RegisterCustomAction("tape_measure_tool-get_tape_measure")
+Events.RegisterCustomAction("tape_measure_tool-dispose_tape_measure")
+
+GuiActions.RegisterButtonActions()

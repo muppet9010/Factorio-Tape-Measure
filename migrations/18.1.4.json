@@ -1,0 +1,9 @@
+{
+    "custom-input":[
+        ["get-tape-measure", "tape_measure_tool-get_tape_measure"],
+        ["dispose-tape-measure", "tape_measure_tool-get_tape_measure"]
+    ],
+    "item":[
+        ["tape-measure", "tape_measure_tool"]
+    ]
+}
