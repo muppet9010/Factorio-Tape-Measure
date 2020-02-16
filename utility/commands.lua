@@ -25,6 +25,7 @@ Commands.Register = function(name, helpText, commandFunction, adminOnly)
 end
 
 --Supports string arguments with spaces within single or double quotes. No escaping of quotes within a command needed. Tables as json can NOT have spaces in them
+--TODO: redo to make this handle spaces in JSON by tracking JSON data structure open and closes.
 Commands.GetArgumentsFromCommand = function(parameterString)
     local args = {}
     local longArg = ""

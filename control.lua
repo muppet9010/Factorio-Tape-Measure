@@ -1,7 +1,7 @@
 local Gui = require("scripts/gui")
 local Measure = require("scripts/measure")
 local Events = require("utility/events")
-local GuiActions = require("utility/gui-actions")
+local GuiActionsClick = require("utility/gui-actions-click")
 
 --TODO: add migration script to replace any held measureig tools
 
@@ -15,13 +15,8 @@ local function OnLoad()
     Gui.OnLoad()
 end
 
-local function OnSettingChanged(event)
-    Gui.OnSettingChanged(event)
-end
-
 local function OnStartup()
     CreateGlobals()
-    OnSettingChanged(nil)
     OnLoad()
 
     Gui.OnStartup()
@@ -29,13 +24,13 @@ end
 
 script.on_init(OnStartup)
 script.on_configuration_changed(OnStartup)
-script.on_event(defines.events.on_runtime_mod_setting_changed, OnSettingChanged)
 script.on_load(OnLoad)
 
-Events.RegisterEvent(defines.events.on_player_joined_game)
 Events.RegisterEvent(defines.events.on_player_selected_area)
 Events.RegisterEvent(defines.events.on_mod_item_opened)
-Events.RegisterCustomAction("tape_measure_tool-get_tape_measure")
-Events.RegisterCustomAction("tape_measure_tool-dispose_tape_measure")
+Events.RegisterCustomInput("tape_measure_tool-get_tape_measure")
+--TODO: not working
+Events.RegisterCustomInput("tape_measure_tool-dispose_tape_measure")
+Events.RegisterEvent(defines.events.on_lua_shortcut)
 
-GuiActions.RegisterButtonActions()
+GuiActionsClick.MonitorGuiClickActions()
