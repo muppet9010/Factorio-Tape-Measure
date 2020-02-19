@@ -24,32 +24,79 @@ Commands.Register = function(name, helpText, commandFunction, adminOnly)
     commands.add_command(name, helpText, handlerFunction)
 end
 
---Supports string arguments with spaces within single or double quotes. No escaping of quotes within a command needed. Tables as json can NOT have spaces in them
---TODO: redo to make this handle spaces in JSON by tracking JSON data structure open and closes.
+-- Supports multiple string arguments seperated by a space as a commands parameter. Can use pairs of single or double quotes to define the start and end of an argument string with spaces in it. Supports JSON array [] and dictionary {} of N depth and content characters.
+-- String quotes can be escaped "\" within their own quote type, ie: 'don\'t' will come out as "don't". Note the same quote type rule, i.e. "don\'t" will come out as "don\'t'" . Otherwise escape character "\" wil be passed through as regular text.
 Commands.GetArgumentsFromCommand = function(parameterString)
     local args = {}
-    local longArg = ""
-    if parameterString ~= nil then
-        for text in string.gmatch(parameterString or "nil", "%S+") do
-            if (string.sub(text, 1, 1) == "'" and string.sub(text, -1) == "'") or (string.sub(text, 1, 1) == '"' and string.sub(text, -1) == '"') then
-                table.insert(args, Commands._CheckValueType(text))
-            elseif string.sub(text, 1, 1) == "'" or string.sub(text, 1, 1) == '"' then
-                longArg = text
-            elseif string.sub(text, -1) == "'" or string.sub(text, -1) == '"' then
-                longArg = longArg .. " " .. text
-                table.insert(args, Commands._CheckValueType(longArg))
-                longArg = ""
-            elseif longArg ~= "" then
-                longArg = longArg .. " " .. text
-            else
-                table.insert(args, Commands._CheckValueType(text))
+    if parameterString == nil or parameterString == "" or parameterString == " " then
+        return args
+    end
+    local openCloseChars = {
+        ["{"] = "}",
+        ["["] = "]",
+        ['"'] = '"',
+        ["'"] = "'"
+    }
+    local escapeChar = "\\"
+
+    local currentString, inString, inJson, openChar, closeChar, jsonSteppedIn, prevCharEscape = "", false, false, "", "", 0, false
+    for char in string.gmatch(parameterString, ".") do
+        if not inJson then
+            if char == "{" or char == "[" then
+                inJson = true
+                openChar = char
+                closeChar = openCloseChars[openChar]
+                currentString = char
+            elseif not inString and char ~= " " then
+                if char == '"' or char == "'" then
+                    inString = true
+                    openChar = char
+                    closeChar = openCloseChars[openChar]
+                    if currentString ~= "" then
+                        table.insert(args, Commands._StringToTypedObject(currentString))
+                        currentString = ""
+                    end
+                else
+                    currentString = currentString .. char
+                end
+            elseif inString then
+                if char == escapeChar then
+                    prevCharEscape = true
+                else
+                    if char == closeChar and not prevCharEscape then
+                        inString = false
+                        table.insert(args, Commands._StringToTypedObject(currentString))
+                        currentString = ""
+                    elseif char == closeChar and prevCharEscape then
+                        prevCharEscape = false
+                        currentString = currentString .. char
+                    elseif prevCharEscape then
+                        prevCharEscape = false
+                        currentString = currentString .. escapeChar .. char
+                    else
+                        currentString = currentString .. char
+                    end
+                end
+            end
+        else
+            currentString = currentString .. char
+            if char == openChar then
+                jsonSteppedIn = jsonSteppedIn + 1
+            elseif char == closeChar then
+                if jsonSteppedIn > 0 then
+                    jsonSteppedIn = jsonSteppedIn - 1
+                else
+                    inJson = false
+                    table.insert(args, Commands._StringToTypedObject(currentString))
+                end
             end
         end
     end
+
     return args
 end
 
-Commands._CheckValueType = function(text)
+Commands._StringToTypedObject = function(text)
     if text == "nil" then
         return nil
     end
@@ -65,17 +112,7 @@ Commands._CheckValueType = function(text)
     if castedText ~= nil then
         return castedText
     end
-    return Commands._StripLeadingTrailingQuotes(text)
-end
-
-Commands._StripLeadingTrailingQuotes = function(text)
-    if string.sub(text, 1, 1) == "'" and string.sub(text, -1) == "'" then
-        return string.sub(text, 2, -2)
-    elseif string.sub(text, 1, 1) == '"' and string.sub(text, -1) == '"' then
-        return string.sub(text, 2, -2)
-    else
-        return text
-    end
+    return text
 end
 
 return Commands

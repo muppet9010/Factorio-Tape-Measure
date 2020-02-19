@@ -13,6 +13,7 @@ local Constants = require("constants")
     - The optional "registerClick" passes the supplied "actionName" string, the optional "data" table and the optional disabled boolean to GuiActionsClick.RegisterGuiForClick().
     - The optional "returnElement" if true will return the element in a table of elements. Key will be the elements name..type and the value a reference to the element.
     - The optional "exclude" if true will mean the GUI Element is ignored. To allow more natural templating.
+    - The optional "attributes" is a table of k v pairs that is applied to the element via the API post element creation. V can be a return function wrapped around another function if you want it to be executed post element creation. i.e. function() return MyMainFunction("bob") end. Intended for the occasioanl adhock attributes you want to set which can't be done in the add() API function. i.e. drag_target or auto_center.
 ]]
 GuiUtil.AddElement = function(elementDetails)
     if elementDetails.exclude == true then
@@ -23,34 +24,43 @@ GuiUtil.AddElement = function(elementDetails)
     elementDetails.caption = GuiUtil._ReplaceSelfWithGeneratedName(elementDetails, "caption")
     elementDetails.tooltip = GuiUtil._ReplaceSelfWithGeneratedName(elementDetails, "tooltip")
     local returnElements = {}
+    local attributes, returnElement, storeName, styling, registerClick, children = elementDetails.attributes, elementDetails.returnElement, elementDetails.storeName, elementDetails.styling, elementDetails.registerClick, elementDetails.children
+    elementDetails.attributes, elementDetails.returnElement, elementDetails.storeName, elementDetails.styling, elementDetails.registerClick, elementDetails.children = nil, nil, nil, nil, nil, nil
     local element = elementDetails.parent.add(elementDetails)
-    if elementDetails.returnElement then
+    if returnElement then
         if elementDetails.name == nil then
             Logging.LogPrint("ERROR: GuiUtil.AddElement returnElement attribute requires element name to be supplied.")
         else
             returnElements[elementDetails.name] = element
         end
     end
-    if elementDetails.storeName ~= nil then
+    if storeName ~= nil then
         if elementDetails.name == nil then
             Logging.LogPrint("ERROR: GuiUtil.AddElement storeName attribute requires element name to be supplied.")
         else
-            GuiUtil.AddElementToPlayersReferenceStorage(element.player_index, elementDetails.storeName, elementDetails.name, element)
+            GuiUtil.AddElementToPlayersReferenceStorage(element.player_index, storeName, elementDetails.name, element)
         end
     end
-    if elementDetails.styling ~= nil then
-        GuiUtil._ApplyStylingArgumentsToElement(element, elementDetails.styling)
-        elementDetails.styling = nil
+    if styling ~= nil then
+        GuiUtil._ApplyStylingArgumentsToElement(element, styling)
     end
-    if elementDetails.registerClick ~= nil then
+    if registerClick ~= nil then
         if elementDetails.name == nil then
             Logging.LogPrint("ERROR: GuiUtil.AddElement registerClick attribute requires element name to be supplied.")
         else
-            GuiActionsClick.RegisterGuiForClick(rawName, elementDetails.type, elementDetails.registerClick.actionName, elementDetails.registerClick.data, elementDetails.registerClick.disabled)
+            GuiActionsClick.RegisterGuiForClick(rawName, elementDetails.type, registerClick.actionName, registerClick.data, registerClick.disabled)
         end
     end
-    if elementDetails.children ~= nil then
-        for _, child in pairs(elementDetails.children) do
+    if attributes ~= nil then
+        for k, v in pairs(attributes) do
+            if type(v) == "function" then
+                v = v()
+            end
+            element[k] = v
+        end
+    end
+    if children ~= nil then
+        for _, child in pairs(children) do
             if type(child) ~= "table" then
                 Logging.LogPrint("ERROR: GuiUtil.AddElement children not supplied as an array of child details in their own table.")
             else
@@ -120,6 +130,16 @@ GuiUtil.UpdateElementFromPlayersReferenceStorage = function(playerIndex, storeNa
             Logging.LogPrint("ERROR: GuiUtil.UpdateElementFromPlayersReferenceStorage doesn't support children for element name '" .. name .. "' and type '" .. type .. "'")
             arguments.children = nil
         end
+        if arguments.attributes ~= nil then
+            for k, v in pairs(arguments.attributes) do
+                if type(v) == "function" then
+                    v = v()
+                end
+                element[k] = v
+            end
+            arguments.attributes = nil
+        end
+
         for argName, argValue in pairs(arguments) do
             if argName == "caption" or argName == "tooltip" then
                 argValue = GuiUtil._ReplaceSelfWithGeneratedName({name = generatedName, [argName] = argValue}, argName)
