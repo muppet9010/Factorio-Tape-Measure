@@ -3,7 +3,7 @@ local Events = require("utility/events")
 local GuiUtil = require("utility/gui-util")
 local GuiActionsClick = require("utility/gui-actions-click")
 local Interfaces = require("utility/interfaces")
-local Logging = require("utility/logging")
+--local Logging = require("utility/logging")
 local Gui = {}
 
 Gui.OnLoad = function()
@@ -29,7 +29,6 @@ Gui.CloseGui = function(player)
 end
 
 Gui.CloseGuiButtonAction = function(actionData)
-    GuiActionsClick.RemoveGuiForClick(actionData.eventData.element.name)
     local player = game.get_player(actionData.playerIndex)
     Gui.CloseGui(player)
 end
@@ -158,7 +157,9 @@ Gui.ToggleGuiButtonAction = function(actionData)
 end
 
 Gui.UpdateGui = function(player, distanceX, distanceY, tileX, tileY)
-    Gui.OpenGui(player)
+    if GuiUtil.GetElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame") == nil then
+        Gui.OpenGui(player)
+    end
     GuiUtil.UpdateElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "results_table_distance_width_value", "label", {caption = Utils.RoundNumberToDecimalPlaces(distanceX, 1)})
     GuiUtil.UpdateElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "results_table_distance_depth_value", "label", {caption = Utils.RoundNumberToDecimalPlaces(distanceY, 1)})
     GuiUtil.UpdateElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "results_table_tile_width_value", "label", {caption = tileX})
