@@ -3,6 +3,7 @@ local Events = require("utility/events")
 local GuiUtil = require("utility/gui-util")
 local GuiActionsClick = require("utility/gui-actions-click")
 local Interfaces = require("utility/interfaces")
+local Logging = require("utility/logging")
 local Gui = {}
 
 Gui.OnLoad = function()
@@ -28,6 +29,7 @@ Gui.CloseGui = function(player)
 end
 
 Gui.CloseGuiButtonAction = function(actionData)
+    GuiActionsClick.RemoveGuiForClick(actionData.eventData.element.name)
     local player = game.get_player(actionData.playerIndex)
     Gui.CloseGui(player)
 end

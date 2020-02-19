@@ -34,15 +34,20 @@ GuiActionsClick.RegisterGuiForClick = function(elementName, elementType, actionN
     end
 end
 
---Called when desired to remove a specific button or other GuiElement from triggering its action.
+-- Called when desired to remove a specific button or other GuiElement from triggering its action.
+-- Should be called to remove links for buttons when their elements are removed to stop global data lingering.
+-- ElementType is only needed if you are supplying raw name and not the name of a created element.
 GuiActionsClick.RemoveGuiForClick = function(elementName, elementType)
-    if elementName == nil or elementType == nil then
+    if elementName == nil then
         error("GuiActions.RemoveButtonName called with missing arguments")
     end
     if global.UTILITYGUIACTIONSGUICLICK == nil then
         return
     end
-    local name = GuiActionsClick.GenerateGuiElementName(elementName, elementType)
+    local name = elementName
+    if elementType ~= nil then
+        name = GuiActionsClick.GenerateGuiElementName(elementName, elementType)
+    end
     global.UTILITYGUIACTIONSGUICLICK[name] = nil
 end
 
