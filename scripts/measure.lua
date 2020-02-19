@@ -57,10 +57,10 @@ Measure.PointClicked = function(eventData)
     local firstPoint = global.measure.playerFirstClick[player.index]
     if firstPoint == nil then
         global.measure.playerFirstClick[player.index] = centerPos
-        player.surface.create_entity {type = "flying-text", name = "flying-text", position = centerPos, text = {"player-message.tape_measure_tool-first_point"}, color = {r = 0, g = 1, b = 0, a = 0}}
+        player.surface.create_entity {type = "flying-text", name = "flying-text", position = centerPos, text = {"player-message.tape_measure_tool-first_point"}, color = {r = 0, g = 1, b = 0, a = 0}, render_player_index = player.index}
     else
         local secondPoint = centerPos
-        player.surface.create_entity {type = "flying-text", name = "flying-text", position = centerPos, text = {"player-message.tape_measure_tool-second_point"}, color = {r = 0, g = 1, b = 0, a = 0}}
+        player.surface.create_entity {type = "flying-text", name = "flying-text", position = centerPos, text = {"player-message.tape_measure_tool-second_point"}, color = {r = 0, g = 1, b = 0, a = 0}, render_player_index = player.index}
         local pointsDistanceX = firstPoint.x - secondPoint.x
         if pointsDistanceX < 0 then
             pointsDistanceX = 0 - pointsDistanceX
