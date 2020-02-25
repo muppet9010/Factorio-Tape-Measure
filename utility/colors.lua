@@ -1,6 +1,6 @@
 local Colors = {}
 --https://www.rapidtables.com/web/color/html-color-codes.html
---=CONCATENATE("Colors.", B1, " = {",  SUBSTITUTE(SUBSTITUTE(D1, "(", ""),")",""), ",255}")
+--Excel conversion string: =CONCATENATE("Colors.", B1, " = {",  SUBSTITUTE(SUBSTITUTE(D1, "(", ""),")",""), ",255}")
 
 --Custom
 Colors.lightred = {255, 100, 100, 255}

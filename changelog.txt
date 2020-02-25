@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 18.1.5
+Date: 2020-02-16
+  Features:
+    - Added shortcut icon to get a measuring tool, as when used this will open the GUI.
+    - Clicking for measure point 1 and 2 ingame flying text now only shown to that player.
+  Changes:
+    - Removed mod button in top left to open GUI to tidy screen up, as shortcut does this now.
+    - Restructured GUI to be a bit more minimal and utilise other changes to avoid duplication.
+    - Updated to use a newer GUI & Style library to maintain compatibility with my other mods.
+  Bugfixes:
+  Info:
+---------------------------------------------------------------------------------------------------
 Version: 18.1.4
 Date: 2020-01-26
   Features:

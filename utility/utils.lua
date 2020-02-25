@@ -2,7 +2,7 @@ local Utils = {}
 --local Logging = require("utility/logging")
 local factorioUtil = require("__core__/lualib/util")
 Utils.DeepCopy = factorioUtil.table.deepcopy
-Utils.TableMerge = factorioUtil.merge
+Utils.TableMerge = factorioUtil.merge -- takes an array of tables and returns a new table with copies of their contents
 
 function Utils.KillAllKillableObjectsInArea(surface, positionedBoundingBox, killerEntity, collisionBoxOnlyEntities)
     local entitiesFound = surface.find_entities(positionedBoundingBox)
@@ -80,7 +80,7 @@ function Utils.TableToProperPosition(thing)
     elseif thing.x ~= nil and thing.y ~= nil then
         return {x = thing.x, y = thing.y}
     else
-        return {x = thing[1], y = thing[1]}
+        return {x = thing[1], y = thing[2]}
     end
 end
 
@@ -418,6 +418,15 @@ function Utils.GetTableKeyWithValue(theTable, value)
     return nil
 end
 
+function Utils.GetTableKeyWithInnerKeyValue(theTable, key, value)
+    for i, innerTable in pairs(theTable) do
+        if innerTable[key] ~= nil and innerTable[key] == value then
+            return i
+        end
+    end
+    return nil
+end
+
 function Utils.GetRandomFloatInRange(lower, upper)
     return lower + math.random() * (upper - lower)
 end
@@ -557,6 +566,9 @@ function Utils.PadNumberToMinimumDigits(input, requiredLength)
 end
 
 function Utils.DisplayNumberPretty(number)
+    if number == nil then
+        return ""
+    end
     local formatted = number
     local k
     while true do
@@ -632,6 +644,7 @@ function Utils.DisplayTimeOfTicks(inputTicks, displayLargestTimeUnit, displaySma
 end
 
 function Utils._CreatePlacementTestEntityPrototype(entityToClone, newEntityName, subgroup, collisionMask)
+    --TODO: doesn't handle mipmaps at all presently. Also ignores any of the extra data in an icons table of "Types/IconData". Think this should just duplicate the target icons table entry.
     local clonedIcon = entityToClone.icon
     local clonedIconSize = entityToClone.icon_size
     if clonedIcon == nil then

@@ -8,12 +8,17 @@ Selection Box
 Clicking Points
 ![Clicking Points](https://media.giphy.com/media/5zsdp1w8VO0KsYxQq8/giphy.gif)
 
-If you single left click with the tool it will detect this as a point. Points will be measured in sequentially clicked pairs.
-If you left click and hold with the tool it will show the selection box and when you release the selected area will be measured. A selection of less than 1 tile width and height will be recognised as a click.
-If you right click (configurable) with the tool held it will be disposed of.
+Usage
+---------
 
-The tool can be used via the map when zoomed in to see things properly.
-When you use the tape measure tool the mods GUI will open to show the results. Closing the GUI will clear the results.
-You can obtain the tape measure item via the mod's in-game button in the top left corner or via a configurable shortcut (default: Control M)
-You can discard the tape measure item from your inventory by also right-clicking on it.
-The mod button in the top left can be hidden via a per player mod setting. Useful for when using the shortcut to obtain the tape measure and you want to reduce mod icon clutter on the screen.
+- If you single left click with the tool it will detect this as a point. Points will be measured in sequentially clicked pairs.
+- If you left click and hold with the tool it will show the selection box and when you release the selected area will be measured. A selection of less than 1 tile width and height will be recognised as a click.
+- If you right click (configurable) with the tool held it will be disposed of.
+
+Capabilities
+-------
+
+- You can obtain the tape measure item via the mod's in-game shortcut button in the bottom middle or via a configurable shortcut (default: Control M)
+- The tool can be used via the map when zoomed in to see things properly.
+- When you use the tape measure tool the mods GUI will open to show the results. Closing the GUI will clear the results.
+- You can discard the tape measure item from your inventory by also right-clicking on it.
