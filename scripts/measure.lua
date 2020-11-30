@@ -106,7 +106,7 @@ Measure.DisposeTapeMeasureInHand = function(eventData)
 end
 
 Measure.GivePlayerTapeMeasure = function(player)
-    player.clean_cursor()
+    player.clear_cursor()
     player.cursor_stack.set_stack("tape_measure_tool")
 end
 
