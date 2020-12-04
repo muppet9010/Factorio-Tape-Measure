@@ -149,7 +149,11 @@ end
 
 Gui.ToggleGuiButtonAction = function(actionData)
     local player = game.get_player(actionData.playerIndex)
-    if GuiUtil.GetElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame") == nil then
+    local tapeMeasureGui = GuiUtil.GetElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame")
+    if tapeMeasureGui == nil then
+        Gui.OpenGui(player)
+    elseif not tapeMeasureGui.valid then
+        GuiUtil.DestroyElementInPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame")
         Gui.OpenGui(player)
     else
         Gui.CloseGui(player)
@@ -157,7 +161,11 @@ Gui.ToggleGuiButtonAction = function(actionData)
 end
 
 Gui.UpdateGui = function(player, distanceX, distanceY, tileX, tileY)
-    if GuiUtil.GetElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame") == nil then
+    local tapeMeasureGui = GuiUtil.GetElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame")
+    if tapeMeasureGui == nil then
+        Gui.OpenGui(player)
+    elseif not tapeMeasureGui.valid then
+        GuiUtil.DestroyElementInPlayersReferenceStorage(player.index, "tape_measure_tool", "tape_measure_gui", "frame")
         Gui.OpenGui(player)
     end
     GuiUtil.UpdateElementFromPlayersReferenceStorage(player.index, "tape_measure_tool", "results_table_distance_width_value", "label", {caption = Utils.RoundNumberToDecimalPlaces(distanceX, 1)})

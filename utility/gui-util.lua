@@ -114,6 +114,13 @@ GuiUtil.UpdateElementFromPlayersReferenceStorage = function(playerIndex, storeNa
     ignoreMissingElement = ignoreMissingElement or false
     local element = GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, storeName, name, type)
     if element ~= nil then
+        if not element.valid then
+            Logging.LogPrint(
+                "WARNING: Muppet GUI - A mod tried to update a GUI, buts the GUI is invalid. This is either a bug, or another mod deleted this GUI. Hopefully closing the affected GUI and re-opening it will resolve this. GUI details: player: '" ..
+                    game.get_player(playerIndex).name .. "', storeName: '" .. storeName .. "', guiElementName: '" .. name .. "', guiElementType '" .. type .. "'"
+            )
+            return
+        end
         local generatedName = GuiUtil.GenerateGuiElementName(name, type)
         if arguments.styling ~= nil then
             GuiUtil._ApplyStylingArgumentsToElement(element, arguments.styling)
@@ -194,6 +201,9 @@ GuiUtil.DestroyPlayersReferenceStorage = function(playerIndex, storeName)
 end
 
 GuiUtil._ApplyStylingArgumentsToElement = function(element, stylingArgs)
+    if element == nil or (not element.valid) then
+        return
+    end
     if stylingArgs.column_alignments ~= nil then
         for k, v in pairs(stylingArgs.column_alignments) do
             element.style.column_alignments[k] = v
@@ -219,7 +229,7 @@ GuiUtil._ReplaceSelfWithGeneratedName = function(arguments, argName)
 end
 
 GuiUtil.GenerateGuiElementName = function(name, type)
-    if name == nil then
+    if name == nil or type == nil then
         return nil
     else
         return Constants.ModName .. "-" .. name .. "-" .. type

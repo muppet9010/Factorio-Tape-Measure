@@ -4,6 +4,7 @@ Date: 2020-12-04
   Features:
   Changes:
   Bugfixes:
+    - Prevent errors should the GUI be removed by another mod and we try to update its values.
   Info:
     - Moved to latest Muppet Utility library.
 ---------------------------------------------------------------------------------------------------
