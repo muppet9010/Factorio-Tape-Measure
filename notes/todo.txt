@@ -1,2 +1,0 @@
-TODO:
- - Add a mod option that disposes of the tool when you return it to the inventory. Default to enabled. With the shortcut keeping one on you is rather useless now.
