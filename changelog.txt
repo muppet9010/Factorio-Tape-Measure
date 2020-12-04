@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 20.1.7
+Date: 2020-12-04
+  Features:
+  Changes:
+  Bugfixes:
+    - Prevent errors should the GUI be removed by another mod and we try to update its values.
+  Info:
+    - Moved to latest Muppet Utility library.
+---------------------------------------------------------------------------------------------------
 Version: 20.1.6
 Date: 2020-11-30
   Features:

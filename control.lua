@@ -26,10 +26,4 @@ script.on_init(OnStartup)
 script.on_configuration_changed(OnStartup)
 script.on_load(OnLoad)
 
-Events.RegisterEvent(defines.events.on_player_selected_area)
-Events.RegisterEvent(defines.events.on_mod_item_opened)
-Events.RegisterCustomInput("tape_measure_tool-get_tape_measure")
-Events.RegisterCustomInput("tape_measure_tool-dispose_tape_measure")
-Events.RegisterEvent(defines.events.on_lua_shortcut)
-
 GuiActionsClick.MonitorGuiClickActions()

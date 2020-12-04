@@ -9,10 +9,10 @@ Measure.CreateGlobals = function()
 end
 
 Measure.OnLoad = function()
-    Events.RegisterHandler("tape_measure_tool-get_tape_measure", "Measure.OnGetTapeMeasureCustomInput", Measure.OnGetTapeMeasureCustomInput)
-    Events.RegisterHandler("tape_measure_tool-dispose_tape_measure", "Measure.DisposeTapeMeasureInHand", Measure.DisposeTapeMeasureInHand)
-    Events.RegisterHandler(defines.events.on_player_selected_area, "Measure.OnSelectedEvent", Measure.OnSelectedEvent)
-    Events.RegisterHandler(defines.events.on_mod_item_opened, "Measure.OnModItemOpenedEvent", Measure.OnModItemOpenedEvent)
+    Events.RegisterHandlerCustomInput("tape_measure_tool-get_tape_measure", "Measure.OnGetTapeMeasureCustomInput", Measure.OnGetTapeMeasureCustomInput)
+    Events.RegisterHandlerCustomInput("tape_measure_tool-dispose_tape_measure", "Measure.DisposeTapeMeasureInHand", Measure.DisposeTapeMeasureInHand)
+    Events.RegisterHandlerEvent(defines.events.on_player_selected_area, "Measure.OnSelectedEvent", Measure.OnSelectedEvent)
+    Events.RegisterHandlerEvent(defines.events.on_mod_item_opened, "Measure.OnModItemOpenedEvent", Measure.OnModItemOpenedEvent)
     Interfaces.RegisterInterface("Measure.GivePlayerTapeMeasure", Measure.GivePlayerTapeMeasure)
 end
 
