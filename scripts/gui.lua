@@ -11,7 +11,7 @@ Gui.OnLoad = function()
     GuiActionsClick.LinkGuiClickActionNameToFunction("Gui.CloseGuiButtonAction", Gui.CloseGuiButtonAction)
     GuiActionsClick.LinkGuiClickActionNameToFunction("Gui.GivePlayerTapeMeasureButtonAction", Gui.GivePlayerTapeMeasureButtonAction)
     Interfaces.RegisterInterface("Gui.UpdateGui", Gui.UpdateGui)
-    Events.RegisterHandler(defines.events.on_lua_shortcut, "Gui.OnLuaShortcut", Gui.OnLuaShortcut)
+    Events.RegisterHandlerEvent(defines.events.on_lua_shortcut, "Gui.OnLuaShortcut", Gui.OnLuaShortcut)
 end
 
 Gui.OnStartup = function()

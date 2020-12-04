@@ -1,7 +1,7 @@
 local Commands = {}
 local Utils = require("utility/utils")
 
---Call from OnLoad
+-- Call from OnLoad
 Commands.Register = function(name, helpText, commandFunction, adminOnly)
     commands.remove_command(name)
     local handlerFunction
@@ -25,7 +25,8 @@ Commands.Register = function(name, helpText, commandFunction, adminOnly)
 end
 
 -- Supports multiple string arguments seperated by a space as a commands parameter. Can use pairs of single or double quotes to define the start and end of an argument string with spaces in it. Supports JSON array [] and dictionary {} of N depth and content characters.
--- String quotes can be escaped "\" within their own quote type, ie: 'don\'t' will come out as "don't". Note the same quote type rule, i.e. "don\'t" will come out as "don\'t'" . Otherwise escape character "\" wil be passed through as regular text.
+-- String quotes can be escaped by "\"" within their own quote type, ie: 'don\'t' will come out as "don't". Note the same quote type rule, i.e. "don\'t" will come out as "don\'t" . Otherwise the escape character \ wil be passed through as regular text.
+-- Returns a table of sequentially indexed arguments
 Commands.GetArgumentsFromCommand = function(parameterString)
     local args = {}
     if parameterString == nil or parameterString == "" or parameterString == " " then
@@ -39,7 +40,7 @@ Commands.GetArgumentsFromCommand = function(parameterString)
     }
     local escapeChar = "\\"
 
-    local currentString, inString, inJson, openChar, closeChar, jsonSteppedIn, prevCharEscape = "", false, false, "", "", 0, false
+    local currentString, inQuotedString, inJson, openChar, closeChar, jsonSteppedIn, prevCharEscape = "", false, false, "", "", 0, false
     for char in string.gmatch(parameterString, ".") do
         if not inJson then
             if char == "{" or char == "[" then
@@ -47,9 +48,9 @@ Commands.GetArgumentsFromCommand = function(parameterString)
                 openChar = char
                 closeChar = openCloseChars[openChar]
                 currentString = char
-            elseif not inString and char ~= " " then
+            elseif not inQuotedString and char ~= " " then
                 if char == '"' or char == "'" then
-                    inString = true
+                    inQuotedString = true
                     openChar = char
                     closeChar = openCloseChars[openChar]
                     if currentString ~= "" then
@@ -59,12 +60,17 @@ Commands.GetArgumentsFromCommand = function(parameterString)
                 else
                     currentString = currentString .. char
                 end
-            elseif inString then
+            elseif not inQuotedString and char == " " then
+                if currentString ~= "" then
+                    table.insert(args, Commands._StringToTypedObject(currentString))
+                    currentString = ""
+                end
+            elseif inQuotedString then
                 if char == escapeChar then
                     prevCharEscape = true
                 else
                     if char == closeChar and not prevCharEscape then
-                        inString = false
+                        inQuotedString = false
                         table.insert(args, Commands._StringToTypedObject(currentString))
                         currentString = ""
                     elseif char == closeChar and prevCharEscape then
@@ -88,9 +94,13 @@ Commands.GetArgumentsFromCommand = function(parameterString)
                 else
                     inJson = false
                     table.insert(args, Commands._StringToTypedObject(currentString))
+                    currentString = ""
                 end
             end
         end
+    end
+    if currentString ~= "" then
+        table.insert(args, Commands._StringToTypedObject(currentString))
     end
 
     return args

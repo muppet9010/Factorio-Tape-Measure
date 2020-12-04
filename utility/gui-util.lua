@@ -3,10 +3,12 @@ local Utils = require("utility/utils")
 local GuiActionsClick = require("utility/gui-actions-click")
 local Logging = require("utility/logging")
 local Constants = require("constants")
+local StyleDataStyleVersion = require("utility/style-data").styleVersion
 
 --[[
     - elementDetails takes everything that GuiElement.add() accepts in Factorio API. Plus compulsory "parent" argument of who to create the GUI element under if it isn't a child element.
     - The "name" argument will be merged with the mod name and type to try and ensure a unique name is given to the GUI element in Factorio API.
+    - The "style" argument will be checked for starting with "muppet_" and if so merged with the style-data version to handle the style prototype version control.
     - The optional "children" argument is an array of other elements detail's arrays, to recursively add in this hierachy. Parent argument isn't required and is ignored for children, as it is worked out during recursive loop.
     - Passing the string "self" as the caption/tooltip value or localised string name will be auto replaced to its unique mod auto generated name under gui-caption/gui-tooltip. This avoids having to duplicate name when defining the element's arguments.
     - The optional "styling" argument of a table of style attributes to be applied post element creation. Saves having to capture local reference to do this with at element declaration point.
@@ -23,6 +25,9 @@ GuiUtil.AddElement = function(elementDetails)
     elementDetails.name = GuiUtil.GenerateGuiElementName(elementDetails.name, elementDetails.type)
     elementDetails.caption = GuiUtil._ReplaceSelfWithGeneratedName(elementDetails, "caption")
     elementDetails.tooltip = GuiUtil._ReplaceSelfWithGeneratedName(elementDetails, "tooltip")
+    if elementDetails.style ~= nil and string.sub(elementDetails.style, 1, 7) == "muppet_" then
+        elementDetails.style = elementDetails.style .. StyleDataStyleVersion
+    end
     local returnElements = {}
     local attributes, returnElement, storeName, styling, registerClick, children = elementDetails.attributes, elementDetails.returnElement, elementDetails.storeName, elementDetails.styling, elementDetails.registerClick, elementDetails.children
     elementDetails.attributes, elementDetails.returnElement, elementDetails.storeName, elementDetails.styling, elementDetails.registerClick, elementDetails.children = nil, nil, nil, nil, nil, nil
@@ -79,7 +84,7 @@ GuiUtil.AddElement = function(elementDetails)
     end
 end
 
---Gets a specific name and type from the returned elements table from the GuiUtil.AddElement() function.
+-- Gets a specific name and type from the returned elements table from the GuiUtil.AddElement() function.
 GuiUtil.GetNameFromReturnedElements = function(returnedElements, elementName, elementType)
     if returnedElements == nil then
         return nil
@@ -104,7 +109,7 @@ GuiUtil.GetElementFromPlayersReferenceStorage = function(playerIndex, storeName,
     return global.GUIUtilPlayerElementReferenceStorage[playerIndex][storeName][GuiUtil.GenerateGuiElementName(name, type)]
 end
 
---Similar options as AddElement where arguments exist. Some don't make sense for updating and so not supported.
+-- Similar options as AddElement where arguments exist. Some don't make sense for updating and so not supported.
 GuiUtil.UpdateElementFromPlayersReferenceStorage = function(playerIndex, storeName, name, type, arguments, ignoreMissingElement)
     ignoreMissingElement = ignoreMissingElement or false
     local element = GuiUtil.GetElementFromPlayersReferenceStorage(playerIndex, storeName, name, type)
