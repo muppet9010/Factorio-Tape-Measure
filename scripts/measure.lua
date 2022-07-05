@@ -99,10 +99,11 @@ end
 
 Measure.DisposeTapeMeasureInHand = function(eventData)
     local player = game.players[eventData.player_index]
-    if player.cursor_stack == nil or not player.cursor_stack.valid_for_read or player.cursor_stack.name ~= "tape_measure_tool" then
+    local player_cursorStack = player.cursor_stack
+    if player_cursorStack == nil or not player_cursorStack.valid_for_read or player_cursorStack.name ~= "tape_measure_tool" then
         return
     end
-    player.cursor_stack.clear()
+    player_cursorStack.clear()
 end
 
 Measure.GivePlayerTapeMeasure = function(player)
