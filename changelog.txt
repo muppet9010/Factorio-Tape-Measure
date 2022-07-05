@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 20.1.8
+Date: 2022-07-05
+  Features:
+  Changes:
+  Bugfixes:
+    - Protect against error when player didn't have a cursor stack (i.e. spectator), but clicked the same mouse button as trying to discard a tape measure tool.
+  Info:
+---------------------------------------------------------------------------------------------------
 Version: 20.1.7
 Date: 2020-12-04
   Features:
